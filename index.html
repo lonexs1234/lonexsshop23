@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Lonexs Shop — Black Russia, премиальная тема</title>
+    <style>
+        /* ========== НОВАЯ ЦВЕТОВАЯ СХЕМА ========== */
+        :root {
+            --primary: #8b5cf6;           /* фиолетовый */
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --secondary: #3b82f6;          /* синий */
+            --accent: #06b6d4;              /* ледяной голубой */
+            --accent-glow: rgba(6, 182, 212, 0.4);
+            --bg-dark: #0f0f13;              /* глубокий темно-серый */
+            --bg-gradient: linear-gradient(145deg, #0f0f13 0%, #1a1a24 100%);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --surface-hover: #1e1e2a;
+            --shadow-color: rgba(0, 0, 0, 0.7);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.5);
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== КАСТОМНЫЙ СКРОЛЛБАР ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+            border: 2px solid var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* ===== СНЕГОПАД (canvas) ===== */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* ===== ГИРЛЯНДА ===== */
+        .garland {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            pointer-events: none;
+            z-index: 999;
+            padding: 0 2px;
+            transform: rotate(-0.5deg);
+            will-change: transform;
+        }
+
+        .garland-light {
+            width: 14px;
+            height: 14px;
+            margin: 2px 1px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 12px currentColor, 0 0 6px rgba(255,255,255,0.6);
+            animation: twinkle 1.8s infinite alternate ease-in-out;
+            transform: scale(0.95);
+            will-change: opacity, transform;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.7; transform: scale(0.9); box-shadow: 0 0 8px currentColor; }
+            100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 20px currentColor, 0 0 12px white; }
+        }
+
+        @media (max-width: 768px) {
+            .garland-light {
+                width: 12px;
+                height: 12px;
+                animation: twinkle 2s infinite alternate;
+            }
+        }
+
+        /* ===== КОНТЕЙНЕР ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            width: 100%;
+        }
+
+        /* ===== ШАПКА САЙТА ===== */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 50px;
+            padding: 10px 25px;
+            margin-bottom: 30px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo-avatar-new {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 25px var(--primary-glow);
+            transition: transform 0.2s;
+        }
+
+        .logo-avatar-new:hover {
+            transform: scale(1.08);
+        }
+
+        .site-title {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px var(--primary-glow);
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-select {
+            background: var(--glass);
+            border: 2px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 9px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .control-select:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== ХЕРО СЕКЦИЯ (уменьшенная аватарка) ===== */
+        .hero-container {
+            text-align: center;
+            margin: 15px auto 30px;
+            animation: float 3s ease-in-out infinite;
+            padding: 0 10px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-avatar {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 24px;
+            object-fit: cover;
+            background: var(--bg-dark);
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 40px var(--primary-glow), 0 10px 30px rgba(0,0,0,0.8);
+            cursor: default;
+            transition: transform 0.3s, box-shadow 0.3s;
+            aspect-ratio: auto;
+        }
+
+        .hero-avatar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 60px var(--primary-glow), 0 15px 40px black;
+        }
+
+        /* ===== ГЛАВНОЕ МЕНЮ ===== */
+        .main-menu {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px 25px;
+            margin: 30px auto;
+            max-width: 850px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.2);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        .menu-btn {
+            background: var(--glass);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 22px 18px;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px var(--primary-glow);
+            color: white;
+            border-color: var(--primary);
+            background: var(--surface-hover);
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ===== ЭКРАНЫ ===== */
+        .products-screen, .messages-screen, .channel-screen, .reviews-screen {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0.5; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .active { display: block; }
+
+        .back-btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 40px;
+            padding: 14px 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 10px 25px var(--primary-glow);
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ===== ТОВАРЫ ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background: var(--glass);
+            border-radius: 28px;
+            padding: 25px 20px 20px;
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 15px 25px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 25px 35px var(--primary-glow), inset 0 0 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: var(--accent);
+            color: #0f0f13;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: glow 2s infinite alternate;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px var(--accent-glow); }
+            100% { box-shadow: 0 0 25px var(--accent), 0 0 15px var(--accent); }
+        }
+
+        .product-avatar {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+            margin-bottom: 18px;
+            background: var(--bg-dark);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-avatar {
+            transform: scale(1.03);
+        }
+
+        .product-title {
+            font-size: 1.7rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px var(--primary-glow);
+            font-weight: 800;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            border-left: 5px solid var(--primary);
+            padding-left: 18px;
+            background: rgba(139, 92, 246, 0.07);
+            border-radius: 0 12px 12px 0;
+            white-space: pre-line;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-align: center;
+            margin: 15px 0 20px;
+            padding: 12px;
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            backdrop-filter: blur(4px);
+            text-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .buy-btn {
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 40px;
+            padding: 18px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: auto;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px var(--primary-glow);
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        }
+
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ===== КОНТАКТЫ, КАНАЛЫ, ОТЗЫВЫ ===== */
+        .contacts-grid, .channel-grid, .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .contact-card, .channel-card, .review-card {
+            background: var(--glass);
+            border-radius: 22px;
+            padding: 25px;
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .contact-card:hover, .channel-card:hover, .review-card:hover {
+            transform: translateY(-6px) rotateX(2deg);
+            border-color: var(--primary);
+            box-shadow: 0 18px 28px var(--primary-glow), inset 0 0 20px rgba(139, 92, 246, 0.1);
+            background: var(--surface-hover);
+        }
+
+        .review-card .review-author {
+            font-weight: 800;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .review-card .review-date {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .screen-title {
+            font-size: 2.3rem;
+            color: var(--primary);
+            text-align: center;
+            margin: 25px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 18px var(--primary-glow);
+            font-weight: 900;
+        }
+
+        .channel-btn {
+            display: inline-block;
+            margin-top: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 10px 22px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 800;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .channel-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+
+        .channel-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ===== УВЕДОМЛЕНИЯ ===== */
+        .notification {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            display: none;
+            z-index: 1001;
+            animation: slideDown 0.3s;
+            box-shadow: 0 12px 25px var(--primary-glow);
+            font-weight: 800;
+            text-align: center;
+            max-width: 90%;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .all-reviews-btn {
+            display: inline-block;
+            margin-top: 30px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .all-reviews-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .all-reviews-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .all-reviews-btn:hover::before {
+            left: 100%;
+        }
+
+        .reviews-footer {
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .site-header { flex-direction: column; align-items: stretch; }
+            .logo { justify-content: center; }
+            .controls { justify-content: center; }
+            .site-title { font-size: 1.7rem; }
+            .hero-avatar { max-width: 100%; }
+            .product-title { font-size: 1.5rem; }
+            .screen-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ГИРЛЯНДА -->
+    <div class="garland" id="garland"></div>
+    <!-- СНЕГОПАД (canvas) -->
+    <canvas id="snow-canvas"></canvas>
+
+    <div class="container">
+        <!-- ШАПКА САЙТА -->
+        <div class="site-header">
+            <div class="logo">
+                <img src="https://i.postimg.cc/NMbrx2kp/photo-2026-02-08-17-54-09.jpg" alt="Lonexs Shop" class="logo-avatar-new" loading="lazy">
+                <span class="site-title">Lonexs Shop</span>
+            </div>
+            <div class="controls">
+                <select id="languageSelect" class="control-select">
+                    <option value="ru" selected>🇷🇺 Русский</option>
+                    <option value="en">🇬🇧 English</option>
+                </select>
+                <select id="currencySelect" class="control-select">
+                    <option value="RUB" selected>₽ RUB</option>
+                    <option value="UAH">₴ UAH</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ХЕРО СЕКЦИЯ: уменьшенная аватарка -->
+        <div class="hero-container">
+            <img src="https://i.postimg.cc/Fs0X0vxf/photo-2026-01-29-19-05-35.jpg" 
+                 alt="Lonexs Shop Hero" 
+                 class="hero-avatar" 
+                 loading="lazy"
+                 onclick="return false;">
+        </div>
+
+        <!-- ГЛАВНОЕ МЕНЮ -->
+        <div class="main-menu" id="mainMenu">
+            <div class="menu-grid">
+                <button class="menu-btn" onclick="showScreen('products')">
+                    <span>🛒</span>
+                    <span data-i18n="products">Товары</span>
+                </button>
+                <button class="menu-btn" onclick="showScreen('messages')">
+                    <span>💬</span>
+                    <span data-i18n="messages">Личные сообщения</span>
+                </button>
+                <button class="menu-btn" onclick="showScreen('channel')">
+                    <span>📺</span>
+                    <span data-i18n="channel">Мои каналы</span>
+                </button>
+                <button class="menu-btn" onclick="showScreen('reviews')">
+                    <span>⭐</span>
+                    <span data-i18n="reviews">Отзывы</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ТОВАРОВ -->
+        <div class="products-screen" id="productsScreen">
+            <button class="back-btn" onclick="showMainMenu()">
+                <span>←</span>
+                <span data-i18n="backToMenu">Назад в меню</span>
+            </button>
+            <h2 class="screen-title" data-i18n="ourProducts">Наши товары</h2>
+            <div class="products-grid">
+                <!-- Black Russia 2023 -->
+                <div class="product-card">
+                    <div class="product-badge" data-i18n="popular">Популярный</div>
+                    <img src="https://i.postimg.cc/NFqfmgWW/photo-2026-01-29-15-57-25.jpg" alt="Black Russia 2023" class="product-avatar" loading="lazy">
+                    <h3 class="product-title" data-i18n="blackRussia2023">Black Russia 2023</h3>
+                    <p class="product-description" data-i18n="blackRussia2023Desc">- Фул автосалон.\n- Донат меню.\n- Кнопки взаимодействия.\n- Кнопки с машиной.\n- Выбор места появления.\n- Метка ЗЗ.\n- На карте 0 дыр.\n- Кеш без авторства</p>
+                    <div class="product-price">
+                        <span class="price-value" data-base-price="300">300</span>
+                        <span class="currency-symbol">₽</span>
+                    </div>
+                    <button class="buy-btn" onclick="buyProduct('Black Russia 2023', 300)">
+                        <span data-i18n="buyNow">Купить сейчас</span>
+                    </button>
+                </div>
+                <!-- Black Russia 2026 -->
+                <div class="product-card">
+                    <div class="product-badge" data-i18n="new">Новинка</div>
+                    <img src="https://i.postimg.cc/NjpMSvH5/photo-2026-01-20-18-33-27.jpg" alt="Black Russia 2026" class="product-avatar" loading="lazy">
+                    <h3 class="product-title" data-i18n="blackRussia2026">Black Russia 2026</h3>
+                    <p class="product-description" data-i18n="blackRussia2026Desc">* 🃏Black Jack\n* 📅Календарь\n* 🔑Регистрация\n* 🛠Крафт\n* 🛡 Зеленые зоны\n* 💎AZ\n* ⛽️АЗС\n* 📦Контейнеры\n* 🏛 Фракции\n* 🎮ПК Клуб\n* 🏡Рублевка\n* 📍GPS\n* 🚘Авторынок\n* 👁Админ Спек\n* 🚀/fly</p>
+                    <div class="product-price">
+                        <span class="price-value" data-base-price="450">450</span>
+                        <span class="currency-symbol">₽</span>
+                    </div>
+                    <button class="buy-btn" onclick="buyProduct('Black Russia 2026', 450)">
+                        <span data-i18n="buyNow">Купить сейчас</span>
+                    </button>
+                </div>
+                <!-- Black Russia Leto 2026 -->
+                <div class="product-card">
+                    <div class="product-badge" data-i18n="summerEdition">Летнее издание</div>
+                    <img src="https://i.postimg.cc/HkxHJcr0/photo-2026-02-15-12-20-36.jpg" alt="Black Russia Leto 2026" class="product-avatar" loading="lazy">
+                    <h3 class="product-title" data-i18n="blackRussiaLeto2026">Black Russia Leto 2026</h3>
+                    <p class="product-description" data-i18n="letoDesc">🌴 Летнее обновление! Уникальные пляжные локации, новые летние квесты, акции и ивенты. Обновленная экономика, кастомные машины и яркая цветовая гамма. Встречай лето в стиле Black Russia!</p>
+                    <div class="product-price">
+                        <span class="price-value" data-base-price="350">350</span>
+                        <span class="currency-symbol">₽</span>
+                    </div>
+                    <button class="buy-btn" onclick="buyProduct('Black Russia Leto 2026', 350)">
+                        <span data-i18n="buyNow">Купить сейчас</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН СООБЩЕНИЙ -->
+        <div class="messages-screen" id="messagesScreen">
+            <button class="back-btn" onclick="showMainMenu()">
+                <span>←</span>
+                <span data-i18n="backToMenu">Назад в меню</span>
+            </button>
+            <h2 class="screen-title" data-i18n="personalMessages">Личные сообщения</h2>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div>✉️</div>
+                    <h3 data-i18n="telegram">Telegram</h3>
+                    <p>@lonexs_support</p>
+                    <a href="https://t.me/lonexs" target="_blank" class="channel-btn" data-i18n="go">Перейти</a>
+                </div>
+                <div class="contact-card">
+                    <div>📧</div>
+                    <h3 data-i18n="email">Email</h3>
+                    <p>support@lonexs-shop.ru</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН КАНАЛОВ -->
+        <div class="channel-screen" id="channelScreen">
+            <button class="back-btn" onclick="showMainMenu()">
+                <span>←</span>
+                <span data-i18n="backToMenu">Назад в меню</span>
+            </button>
+            <h2 class="screen-title" data-i18n="myChannel">Мои каналы</h2>
+            <div class="channel-grid">
+                <div class="channel-card">
+                    <div>📺</div>
+                    <h3 data-i18n="youtubeChannel">YouTube Канал</h3>
+                    <p data-i18n="youtubeDesc">Обзоры и инструкции</p>
+                    <a href="https://www.youtube.com/@Lonexs52" target="_blank" class="channel-btn" data-i18n="go">Перейти</a>
+                </div>
+                <div class="channel-card">
+                    <div>📢</div>
+                    <h3 data-i18n="telegramChannel">Telegram Канал</h3>
+                    <p data-i18n="telegramDesc">Новости и поддержка</p>
+                    <a href="https://t.me/lonexsstudio52" target="_blank" class="channel-btn" data-i18n="subscribe">Подписаться</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ОТЗЫВОВ -->
+        <div class="reviews-screen" id="reviewsScreen">
+            <button class="back-btn" onclick="showMainMenu()">
+                <span>←</span>
+                <span data-i18n="backToMenu">Назад в меню</span>
+            </button>
+            <h2 class="screen-title" data-i18n="customerReviews">Отзывы покупателей</h2>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-author">lildrug</div>
+                    <div class="review-date">25.12.2023</div>
+                    <div data-i18n="review1">Купил Black Russia 2023 - всё работает отлично! Поддержка помогла.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-author">Zidane</div>
+                    <div class="review-date">15.01.2024</div>
+                    <div data-i18n="review2">Заливка мода за 30 минут. Цена адекватная. Рекомендую!</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-author">Tyler</div>
+                    <div class="review-date">05.02.2024</div>
+                    <div data-i18n="review3">Black Russia 2026 — топ! Обновления регулярно, багов нет.</div>
+                </div>
+            </div>
+            <div class="reviews-footer">
+                <a href="https://t.me/+Lj8kOYgIE9hiZDgy" target="_blank" class="all-reviews-btn" data-i18n="allReviews">📢 Все отзывы</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра изображений (если нужно) -->
+    <div class="modal" id="imageModal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeImageModal()">✖</span>
+            <img id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // ========== ПЕРЕВОДЫ (только ru и en) ==========
+        const translations = {
+            ru: {
+                products: "Товары", messages: "Личные сообщения", channel: "Мои каналы", reviews: "Отзывы",
+                ourProducts: "Наши товары", personalMessages: "Личные сообщения", myChannel: "Мои каналы",
+                customerReviews: "Отзывы", blackRussia2023: "Black Russia 2023",
+                blackRussia2023Desc: "- Фул автосалон.\n- Донат меню.\n- Кнопки взаимодействия.\n- Кнопки с машиной.\n- Выбор места появления.\n- Метка ЗЗ.\n- На карте 0 дыр.\n- Кеш без авторства",
+                blackRussia2026: "Black Russia 2026",
+                blackRussia2026Desc: "* 🃏Black Jack\n* 📅Календарь\n* 🔑Регистрация\n* 🛠Крафт\n* 🛡 Зеленые зоны\n* 💎AZ\n* ⛽️АЗС\n* 📦Контейнеры\n* 🏛 Фракции\n* 🎮ПК Клуб\n* 🏡Рублевка\n* 📍GPS\n* 🚘Авторынок\n* 👁Админ Спек\n* 🚀/fly",
+                blackRussiaLeto2026: "Black Russia Leto 2026",
+                letoDesc: "🌴 Летнее обновление! Уникальные пляжные локации, новые летние квесты, акции и ивенты. Обновленная экономика, кастомные машины и яркая цветовая гамма. Встречай лето в стиле Black Russia!",
+                popular: "Популярный", new: "Новинка", summerEdition: "Летнее издание",
+                buyNow: "Купить", backToMenu: "Назад",
+                telegram: "Telegram", email: "Email", youtubeChannel: "YouTube", telegramChannel: "Telegram",
+                youtubeDesc: "Обзоры и инструкции", telegramDesc: "Новости и поддержка", go: "Перейти", subscribe: "Подписаться",
+                allReviews: "📢 Все отзывы", review1: "Купил Black Russia 2023 - всё работает отлично! Поддержка помогла.",
+                review2: "Заливка мода за 30 минут. Цена адекватная. Рекомендую!", review3: "Black Russia 2026 — топ! Обновления регулярно, багов нет.",
+                welcome: "Добро пожаловать в Lonexs Shop!", rub: "₽", uah: "₴"
+            },
+            en: {
+                products: "Products", messages: "Messages", channel: "Channels", reviews: "Reviews",
+                ourProducts: "Our products", personalMessages: "Private messages", myChannel: "My channels",
+                customerReviews: "Reviews", blackRussia2023: "Black Russia 2023",
+                blackRussia2023Desc: "- Full auto showroom.\n- Donation menu.\n- Interaction buttons.\n- Car buttons.\n- Spawn selection.\n- Green zone marker.\n- 0 holes.\n- No authorship",
+                blackRussia2026: "Black Russia 2026",
+                blackRussia2026Desc: "* 🃏Black Jack\n* 📅Calendar\n* 🔑Registration\n* 🛠Craft\n* 🛡 Green zones\n* 💎AZ\n* ⛽️Gas\n* 📦Containers\n* 🏛 Factions\n* 🎮PC Club\n* 🏡Rublyovka\n* 📍GPS\n* 🚘Car market\n* 👁Admin Spec\n* 🚀/fly",
+                blackRussiaLeto2026: "Black Russia Summer 2026",
+                letoDesc: "🌴 Summer edition! Unique beach locations, new summer quests, events. Updated economy, custom cars and bright color scheme. Meet summer in Black Russia style!",
+                popular: "Popular", new: "New", summerEdition: "Summer Edition",
+                buyNow: "Buy", backToMenu: "Back",
+                telegram: "Telegram", email: "Email", youtubeChannel: "YouTube", telegramChannel: "Telegram",
+                youtubeDesc: "Reviews", telegramDesc: "News", go: "Go", subscribe: "Subscribe",
+                allReviews: "📢 All reviews", review1: "Bought Black Russia 2023 - works great! Thanks!", review2: "Mod install 30 min. Fair price.", review3: "Black Russia 2026 is top! Regular updates.",
+                welcome: "Welcome to Lonexs Shop!", rub: "₽", uah: "₴"
+            }
+        };
+
+        // ========== СОСТОЯНИЕ ==========
+        let currentLang = 'ru';
+        let currentCurrency = 'RUB';
+
+        // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            n.textContent = msg; n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 2000);
+        }
+
+        function showMainMenu() {
+            document.getElementById('mainMenu').style.display = 'block';
+            document.querySelectorAll('.products-screen, .messages-screen, .channel-screen, .reviews-screen').forEach(s => s.classList.remove('active'));
+        }
+        
+        function showScreen(id) {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.querySelectorAll('.products-screen, .messages-screen, .channel-screen, .reviews-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id + 'Screen').classList.add('active');
+        }
+
+        function buyProduct(name, basePrice) {
+            let price = currentCurrency === 'UAH' ? Math.round(basePrice * 0.4) : basePrice;
+            let sym = translations[currentLang][currentCurrency.toLowerCase()] || (currentCurrency === 'RUB' ? '₽' : '₴');
+            let now = new Date();
+            let day = String(now.getDate()).padStart(2,'0'), mon = String(now.getMonth()+1).padStart(2,'0'), year = now.getFullYear();
+            let h = String(now.getHours()).padStart(2,'0'), m = String(now.getMinutes()).padStart(2,'0'), s = String(now.getSeconds()).padStart(2,'0');
+            let msg = `🎉 ЗАКАЗ ИЗ Lonexs Shop\n\n🛍 Товары в заказе:\n• ${name} - ${price}${sym} 1шт\n\n💰 Итоговая сумма: ${price} ${sym}\n\nОплачен - нет ❌\n\n🕐 Заказ оформлен: ${day}.${mon}.${year}, ${h}:${m}:${s}`;
+            window.open(`https://t.me/lonexs?text=${encodeURIComponent(msg)}`, '_blank');
+            showNotification(`Заказ на "${name}" отправлен в Telegram`);
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                let key = el.dataset.i18n;
+                if (translations[lang]?.[key]) el.textContent = translations[lang][key];
+            });
+            updatePrices();
+        }
+        
+        function changeCurrency(currency) { currentCurrency = currency; updatePrices(); }
+        
+        function updatePrices() {
+            document.querySelectorAll('.price-value').forEach(el => {
+                let base = parseFloat(el.dataset.basePrice);
+                el.textContent = currentCurrency === 'UAH' ? Math.round(base * 0.4) : base;
+            });
+            document.querySelectorAll('.currency-symbol').forEach(el => {
+                el.textContent = translations[currentLang][currentCurrency.toLowerCase()] || (currentCurrency === 'RUB' ? '₽' : '₴');
+            });
+        }
+
+        // ========== ГИРЛЯНДА ==========
+        function createGarland() {
+            const g = document.getElementById('garland');
+            g.innerHTML = '';
+            const colors = ['#ff4d6d', '#ffb347', '#4cc9f0', '#fdfd96', '#ff99c8', '#b8f2e6', '#c77dff', '#ff6b6b', '#70e000', '#00bbf9'];
+            const count = window.innerWidth < 768 ? 32 : 48;
+            for (let i = 0; i < count; i++) {
+                let light = document.createElement('div');
+                light.className = 'garland-light';
+                light.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                light.style.animationDelay = (Math.random() * 2) + 's';
+                light.style.animationDuration = (Math.random() * 1.2 + 1) + 's';
+                g.appendChild(light);
+            }
+        }
+
+        // ========== СНЕГОПАД НА CANVAS ==========
+        const canvas = document.getElementById('snow-canvas');
+        let ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function initSnow() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            const particleCount = Math.min(100, Math.floor(width / 15));
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 3 + 1,
+                    speed: Math.random() * 1 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.3
+                });
+            }
+        }
+
+        function drawSnow() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'white';
+            
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                ctx.fill();
+                
+                p.y += p.speed;
+                if (p.y > height) {
+                    p.y = -10;
+                    p.x = Math.random() * width;
+                }
+            }
+            requestAnimationFrame(drawSnow);
+        }
+
+        // ========== ЗАПУСК ==========
+        window.addEventListener('DOMContentLoaded', () => {
+            createGarland();
+            initSnow();
+            drawSnow();
+            changeLanguage('ru');
+            document.getElementById('languageSelect').addEventListener('change', e => changeLanguage(e.target.value));
+            document.getElementById('currencySelect').addEventListener('change', e => changeCurrency(e.target.value));
+            showNotification(translations[currentLang].welcome);
+        });
+
+        window.addEventListener('resize', () => {
+            initSnow();
+            createGarland();
+        });
+    </script>
+</body>
+</html>
